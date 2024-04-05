@@ -67,18 +67,18 @@ const districts = [
 const generateRandomData = () => {
   const temperature = (Math.random() * (35 - 20) + 20).toFixed(2);
   const humidity = (Math.random() * (100 - 60) + 60).toFixed(2);
-  const airPressure = (Math.random() * (1020 - 1000) + 1000).toFixed(2);
+  const windSpeed = (Math.random() * (1020 - 1000) + 1000).toFixed(2);
   const dist = districts[Math.floor(Math.random() * districts.length)]; // Randomly select a province
 
-  const query = `UPDATE weather SET humidity=${humidity}, temp=${temperature}, air=${airPressure} WHERE district = ${dist}`;
+  const query = `UPDATE districts SET humidity=${humidity}, temp=${temperature}, wind=${windSpeed} WHERE name = ${dist}`;
   connection.query(
     query,
-    [temperature, humidity, airPressure, province],
+    [temperature, humidity, windSpeed, province],
     (err, result) => {
       if (err) {
-        console.error("Error inserting data:", err);
+        console.error("Data inserting unsuccessfull:", err);
       } else {
-        console.log("Weather data inserted successfully");
+        console.log("insertition successfully");
       }
     }
   );
