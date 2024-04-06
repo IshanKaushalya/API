@@ -26,6 +26,26 @@ sql
     console.error("Database connection failed: ", err);
   });
 
+//Endpoint to get all data
+app.get("/districts", async (req, res) => {
+  try {
+    // Connect to the database
+    await sql.connect(config);
+
+    // Query to select all data from the weather table
+    const result = await sql.query`SELECT * FROM districts`;
+
+    // Close the database connection
+    await sql.close();
+
+    // Send the data as JSON in the response
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // Endpoint to fetch data from the weather table based on district
 app.get("/district/:districtName", async (req, res) => {
   const districtName = req.params.districtName;
@@ -64,31 +84,31 @@ const districts = [
   "Kandy",
 ];
 
-const generateRandomData = () => {
-  const temperature = (Math.random() * (35 - 20) + 20).toFixed(2);
-  const humidity = (Math.random() * (100 - 60) + 60).toFixed(2);
-  const windSpeed = (Math.random() * (1020 - 1000) + 1000).toFixed(2);
-  const dist = districts[Math.floor(Math.random() * districts.length)]; // Randomly select a province
+// const generateRandomData = () => {
+//   const temperature = (Math.random() * (35 - 20) + 20).toFixed(2);
+//   const humidity = (Math.random() * (100 - 60) + 60).toFixed(2);
+//   const windSpeed = (Math.random() * (1020 - 1000) + 1000).toFixed(2);
+//   const dist = districts[Math.floor(Math.random() * districts.length)]; // Randomly select a province
 
-  const query = `UPDATE districts SET humidity=${humidity}, temp=${temperature}, wind=${windSpeed} WHERE name = ${dist}`;
-  connection.query(
-    query,
-    [temperature, humidity, windSpeed, province],
-    (err, result) => {
-      if (err) {
-        console.error("Data inserting unsuccessfull:", err);
-      } else {
-        console.log("insertition successfully");
-      }
-    }
-  );
-};
+//   const query = `UPDATE districts SET humidity=${humidity}, temp=${temperature}, wind=${windSpeed} WHERE name = ${dist}`;
+//   connection.query(
+//     query,
+//     [temperature, humidity, windSpeed, province],
+//     (err, result) => {
+//       if (err) {
+//         console.error("Data inserting unsuccessfull:", err);
+//       } else {
+//         console.log("insertition successfully");
+//       }
+//     }
+//   );
+// };
 
-// Generate data every 5 minutes
-setInterval(generateRandomData, 5 * 60 * 1000);
+// // Generate data every 5 minutes
+// setInterval(generateRandomData, 5 * 60 * 1000);
 
-// Generate initial data immediately
-generateRandomData();
+// // Generate initial data immediately
+// generateRandomData();
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
