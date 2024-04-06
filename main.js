@@ -27,15 +27,15 @@ sql
   });
 
 // Endpoint to fetch data from the weather table based on district
-app.get("/district/:name", async (req, res) => {
-  const district = req.params.district;
+app.get("/district/:districtName", async (req, res) => {
+  const districtName = req.params.districtName;
   try {
     // Connect to the database
     await sql.connect(config);
 
     // Query to select data from the weather table based on district
     const result =
-      await sql.query`SELECT * FROM districts WHERE name = ${district}`;
+      await sql.query`SELECT * FROM districts WHERE name = ${districtName}`;
 
     // Close the database connection
     await sql.close();
